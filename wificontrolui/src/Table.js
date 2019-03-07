@@ -4,11 +4,13 @@ import Toggle from "react-toggle";
 class Table extends Component {
   state = { rules: [] };
 
+  // Fetch the rules from the backend
   componentDidMount() {
     fetch("/rules")
       .then(res => res.json())
       .then(rules => this.setState({ rules }));
   }
+  // Write changes to backend
   handleChange(rule, event) {
     // console.log('rule:' + rule + ' new state:' + event.target.checked)
     fetch("/rules?rule=" + rule + "&enabled=" + event.target.checked, {
