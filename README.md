@@ -24,6 +24,10 @@ config rule
 ```
 Note that it is disabled as configured, but the app will allow us to change this state.
 
+## OpenWRT extensions
+
+https://github.com/openwrt/luci/wiki/JsonRpcHowTo
+
 ## Useful Links
 https://www.taniarascia.com/getting-started-with-react/
 
