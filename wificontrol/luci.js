@@ -2,7 +2,7 @@
 // API helpers to talk with OpenWRT JSON-RPC
 //
 
-var Luci = function () {};
+var Luci = function() {};
 
 var config = require("config");
 var request = require("request");
@@ -25,16 +25,16 @@ Luci.prototype.login = function(callback) {
   request(options, function(error, response, body) {
     if (!error && response.statusCode == 200) {
       token = JSON.parse(body).result;
-console.log(token);
+      console.log(token);
       callback();
     }
   });
-}
+};
 
 Luci.prototype.set = function(rule, value, callback) {
   if (token == null) {
     Luci.prototype.login(function() {
-console.log('logged in');
+      console.log("logged in");
       Luci.prototype.set(rule, value, callback);
     });
   } else {
@@ -50,22 +50,47 @@ console.log('logged in');
       method: "POST",
       body: dataString
     };
-console.log(options);
+    console.log(options);
     request(options, function(error, response, body) {
-console.log(body);
+      console.log(body);
       if (!error && response.statusCode == 200) {
         options.body =
           ' {"id": "1", "method": "apply", "params": ["firewall"] }';
         request(options, function(error, response, body) {
-console.log(body);
+          console.log(body);
           callback();
         });
       }
     });
   }
-}
+};
+
+Luci.prototype.get = function(rule, callback) {
+  if (token == null) {
+    Luci.prototype.login(function() {
+      Luci.prototype.get(rule, callback);
+    });
+  } else {
+    var dataString =
+      '{ "id": "1", "method": "get", "params": ["firewall", "@rule[' +
+      rule +
+      ']", "enabled"]}';
+
+    var options = {
+      url: "http://" + host + "/cgi-bin/luci/rpc/uci?auth=" + token,
+      method: "POST",
+      body: dataString
+    };
+    request(options, function(error, response, body) {
+      console.log(body);
+      var enabled = JSON.parse(body).result;
+      callback(enabled);
+    });
+  }
+};
 
 // test
 //Luci.prototype.set(13, 1, function(){});
+//Luci.prototype.get(13, function(value) { console.log(value); });
 
 module.exports = new Luci();

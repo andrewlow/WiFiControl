@@ -7,6 +7,12 @@ var luci = require("../luci");
 var users = JSON.parse(JSON.stringify(config.get("users")));
 
 router.get("/", function(req, res, next) {
+  for (const item of users) {
+    // inverse logic, internet enabled means the rule is disabled.
+    luci.get(item.rule, function(value) {
+      item.enabled = value == 0;
+    });
+  }
   res.json(users);
 });
 
