@@ -35,3 +35,5 @@ https://github.com/aaronshaf/react-toggle
 
 https://daveceddia.com/create-react-app-express-backend/
 
+
+https://openwrt.org/docs/guide-user/base-system/uci
