@@ -1,5 +1,18 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Using this with WiFiControl
+
+* Development * `npm start` will run a local version
+
+* Deployment *
+```
+npm run build
+cp -r build/* ../wificontrol/public
+```
+
+
+----- below is standard template -----
+
 ## Available Scripts
 
 In the project directory, you can run:
