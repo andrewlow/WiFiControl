@@ -25,7 +25,7 @@ Luci.prototype.login = function(callback) {
   request(options, function(error, response, body) {
     if (!error && response.statusCode == 200) {
       token = JSON.parse(body).result;
-      console.log(token);
+      console.log("Token: " + token);
       callback();
     }
   });
@@ -34,7 +34,6 @@ Luci.prototype.login = function(callback) {
 Luci.prototype.set = function(rule, value, callback) {
   if (token == null) {
     Luci.prototype.login(function() {
-      console.log("logged in");
       Luci.prototype.set(rule, value, callback);
     });
   } else {
@@ -50,15 +49,30 @@ Luci.prototype.set = function(rule, value, callback) {
       method: "POST",
       body: dataString
     };
-    console.log(options);
     request(options, function(error, response, body) {
-      console.log(body);
+      if (error) {
+        console.log(error);
+      }
+      console.log("LUCI rule: " + rule + " set: " + value + " result: " + body);
       if (!error && response.statusCode == 200) {
         options.body =
-          ' {"id": "1", "method": "apply", "params": ["firewall"] }';
+          ' {"id": "1", "method": "commit", "params": ["firewall"] }';
         request(options, function(error, response, body) {
-          console.log(body);
-          callback();
+          if (error) {
+            console.log(error);
+          }
+          console.log("LUCI commit result: " + body);
+          if (!error && response.statusCode == 200) {
+            //
+            // Now force a firewall restart to pick up the config changes
+            options.url =
+              "http://" + host + "/cgi-bin/luci/rpc/sys?auth=" + token;
+            options.body = ' { "method": "exec", "params": ["fw3 restart"] }';
+            request(options, function(error, response, body) {
+              console.log("LUCI exec result: " + body);
+              callback();
+            });
+          }
         });
       }
     });
@@ -82,8 +96,11 @@ Luci.prototype.get = function(rule, callback) {
       body: dataString
     };
     request(options, function(error, response, body) {
-      console.log(body);
+      if (error) {
+        console.log(error);
+      }
       var enabled = JSON.parse(body).result;
+      console.log("LUCI rule: " + rule + " enabled: " + enabled);
       callback(enabled);
     });
   }

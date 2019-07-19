@@ -27,12 +27,12 @@ class Table extends Component {
     fetch("/rules?rule=" + rule + "&enabled=" + event.target.checked, {
       method: "post"
     });
-    // after 15 seconds, unblock the UI
+    // after 10 seconds, unblock the UI
     // the delay gives the router time to apply the change
     var tbl = this;
     setTimeout(function() {
       tbl.setState({blocking: false});
-    }, 15000);
+    }, 10000);
   }
 
   render() {
