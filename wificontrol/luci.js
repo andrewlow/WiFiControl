@@ -98,6 +98,11 @@ Luci.prototype.get = function(rule, callback) {
     request(options, function(error, response, body) {
       if (error) {
         console.log(error);
+        token = null;
+        Luci.prototype.login(function() {
+          Luci.prototype.get(rule, callback);
+        })
+        return
       }
       var enabled = JSON.parse(body).result;
       console.log("LUCI rule: " + rule + " enabled: " + enabled);
