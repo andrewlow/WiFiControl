@@ -5,7 +5,14 @@ OpenWRT unlocks the potential in a consumer router, it also avoids getting stuck
 This project is an attempt to build a simple web app to provide easy control over some of your firewall rules. It's built on Node.js with Express and React.
 
 
-## Firewall rules
+## Deploying this
+
+Create the secrets in wificontrol/config/default.json following the template provided.
+Running `make` will do a multi-stage docker build and create an image called `wificontrol` and a container `wifi-control` ready to run
+To start the container `make start` will get it running
+It will listen on port 4000 mapped to the 3001 port in the container
+
+## Firewall rules (this is not how it works actually)
 
 The backend will query your OpenWRT firewall rules. Rules which begin with the text 'APP-' will be exposed to the app. The text that follows 'APP-' will be used as the name in the app.
 
@@ -35,5 +42,6 @@ https://github.com/aaronshaf/react-toggle
 
 https://daveceddia.com/create-react-app-express-backend/
 
-
 https://openwrt.org/docs/guide-user/base-system/uci
+
+https://docs.docker.com/develop/develop-images/multistage-build/
