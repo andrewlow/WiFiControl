@@ -5,7 +5,8 @@ build:
 	docker create \
 		--name wifi-control \
 		-p 4000:3001 \
-		--restart=unless-stopped
+		--restart=unless-stopped \
+		wificontrol
 
 start:
 	docker start wifi-control
