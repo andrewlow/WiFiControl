@@ -23,6 +23,9 @@ Luci.prototype.login = function(callback) {
   };
 
   request(options, function(error, response, body) {
+    if (error) {
+      console.log(error);
+    }
     if (!error && response.statusCode == 200) {
       token = JSON.parse(body).result;
       console.log("Token: " + token);
