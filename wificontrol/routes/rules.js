@@ -19,17 +19,20 @@ router.get("/", function(req, res, next) {
 router.post("/", function(req, res, next) {
   rule = req.param("rule");
   enabled = req.param("enabled") == "true";
-  users.find(row => row.rule == rule).enabled = enabled;
-  // inverse logic, internet enabled means the rule is disabled.
-  if (enabled) {
-    luci.set(rule, 0, function() {
-      console.log("ON");
-    });
-  } else {
-    luci.set(rule, 1, function() {
-      console.log("OFF");
-    });
-  }
+  when = req.param("time");
+  setTimeout(function() {
+    users.find(row => row.rule == rule).enabled = enabled;
+    // inverse logic, internet enabled means the rule is disabled.
+    if (enabled) {
+      luci.set(rule, 0, function() {
+        console.log("ON");
+      });
+    } else {
+      luci.set(rule, 1, function() {
+        console.log("OFF");
+      });
+    }
+  }, when * 60 * 1000);
   res.send("ok");
 });
 

@@ -27,28 +27,26 @@ class Table extends Component {
   }
   // deal with drop down changes
   _onSelect(option) {
-    console.log('Select: ', option.value);
-    //this.setState({when: option.value});
-console.log(this)
+    // Set the global
     when = option.value;
   }
   // Write changes to backend
   handleChange(rule, row, event) {
     // console.log('rule:' + rule + ' new state:' + event.target.checked)
-console.log(event)
     if(event.target.checked) {
       this.setState({message: 'Enabling ' + row.name + ' in ' + when + ' minutes'});
     } else {
       this.setState({message: 'Disabling ' + row.name + ' in ' + when + ' minutes'});
     }
     this.setState({blocking: true});
-    fetch("/rules?rule=" + rule + "&enabled=" + event.target.checked, {
+    fetch("/rules?rule=" + rule + "&enabled=" + event.target.checked + "&time=" + when, {
       method: "post"
     });
     // after 10 seconds, unblock the UI
     // the delay gives the router time to apply the change
     var tbl = this;
     setTimeout(function() {
+      when = 0; // remember to reset to default
       tbl.setState({blocking: false});
     }, 10000);
   }
@@ -58,7 +56,8 @@ console.log(event)
   const options = [ 
 	{ value: 0, label: 'Now' }, 
         {value: 5, label: '5 min'},
-        {value: 10, label: '10 min'} ];
+        {value: 10, label: '10 min'},
+        {value: 15, label: '15 min'} ];
   const defaultOption = options[0];
 
     return (
