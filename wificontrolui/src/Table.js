@@ -62,7 +62,7 @@ class Table extends Component {
 
     return (
       <div>
-        <BlockUi tag="div" blocking={this.state.blocking} renderChildren={false} message={this.state.message}>
+        <BlockUi tag="div" blocking={this.state.blocking} renderChildren={true} message={this.state.message}>
           <table align="center">
             <tbody>
               {this.state.rules.map(row => (
