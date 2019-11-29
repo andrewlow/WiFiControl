@@ -10,3 +10,11 @@ build:
 
 start:
 	docker start wifi-control
+
+update:
+	- docker rm wifi-control-old
+	docker rename wifi-control wifi-control-old
+	make build
+	docker stop wifi-control-old
+	make start
+
