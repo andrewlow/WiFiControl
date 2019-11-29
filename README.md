@@ -12,28 +12,38 @@ Running `make` will do a multi-stage docker build and create an image called `wi
 To start the container `make start` will get it running
 It will listen on port 4000 mapped to the 3001 port in the container
 
-## Firewall rules (this is not how it works actually)
+## Firewall rules
 
-The backend will query your OpenWRT firewall rules. Rules which begin with the text 'APP-' will be exposed to the app. The text that follows 'APP-' will be used as the name in the app.
+The wificontrol/config/default.json file contains a list of firewall rules. This is used to identify which rules we will be manipulating in your OpenWRT.
 
-In terms of the configuration file `/etc/config/firewall`
-
-The rule would be defined as below
+To determine the rule number, I suggest ssh'ing into your openwrt devices and issuing
 
 ```
-config rule
-        option src 'lan'
-        option name 'APP-Kids Tablet'
-        option enabled '0'
-        option src_mac '09:22:0B:54:0A:35'
-        option target 'REJECT'
-        option dest 'wan'
+$ uci show firewall | grep name
 ```
-Note that it is disabled as configured, but the app will allow us to change this state.
+
+This will show you the names and numbers of the firewall rules.
+
+You can then use this information to fill in the table, adding or removing rows as needed
+
+```
+  // Firewall rule mapping
+  "users" : [
+    { name: "Child1", rule: 12, enabled: true },
+    { name: "Tablet", rule: 14, enabled: true },
+    { name: "Computer", rule: 13, enabled: true }
+  ]
+```
+
+The logic for `enabled: true` is not about the rule being enabled, but that traffic is allowed. The app should refresh this automatically to align with the state of your router, but it's nice to make it correct on bootstrap.
 
 ## OpenWRT extensions
 
 https://github.com/openwrt/luci/wiki/JsonRpcHowTo
+
+## Resources
+
+Icon from https://www.iconfinder.com/icons/4307973/eye_illuminati_pyramid_triangle_icon
 
 ## Useful Links
 https://www.taniarascia.com/getting-started-with-react/
